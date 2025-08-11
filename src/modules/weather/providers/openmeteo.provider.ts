@@ -1,9 +1,9 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import axios from 'axios';
-import { PinoLogger } from 'nestjs-pino';
+import { CurrentNormalized } from '../types';
 
 export type OpenMeteoNow = {
-  tempC: number;
+  tempC?: number;
   windMs?: number;
 };
 
@@ -16,13 +16,11 @@ type OpenMeteoResponse = {
 
 @Injectable()
 export class OpenMeteoProvider {
-  constructor(private readonly logger: PinoLogger) {
-    logger.setContext(OpenMeteoProvider.name);
-  }
 
+  readonly name = 'openmeteo';
   private readonly base = 'https://api.open-meteo.com/v1/forecast';
 
-  async getNow(lat: number, lon: number): Promise<OpenMeteoNow> {
+  async fetch(lat: number, lon: number): Promise<CurrentNormalized> {
     try {
       const { data } = await axios.get<OpenMeteoResponse>(this.base, {
         timeout: 4000,
@@ -42,6 +40,8 @@ export class OpenMeteoProvider {
         );
       }
       return {
+        source: this.name,
+        fetchedAt: new Date().toISOString(),
         tempC: cw.temperature,
         windMs: typeof cw.windspeed === 'number' ? cw.windspeed : undefined,
       };
