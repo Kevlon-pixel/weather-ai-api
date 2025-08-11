@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { OpenMeteoProvider } from 'src/weather/openmeteo.provider';
+import { OpenMeteoProvider } from './providers/openmeteo.provider';
 
 @Injectable()
 export class WeatherService {
-  private openmeteo = new OpenMeteoProvider();
+  constructor(private readonly openmeteo: OpenMeteoProvider) {}
 
   async byCoord(lat: number, lon: number) {
     if (!Number.isFinite(lat) || !Number.isFinite(lon)) {

@@ -5,7 +5,9 @@ import { AppController } from './app.controller';
 import { ScheduleModule } from '@nestjs/schedule';
 import { AppService } from './app.service';
 import { envSchema } from './validation/env.validation';
+import { LoggerModule } from 'nestjs-pino';
 import { WeatherModule } from './modules/weather/weather.module';
+import path from 'node:path';
 
 @Module({
   imports: [
@@ -16,6 +18,26 @@ import { WeatherModule } from './modules/weather/weather.module';
     CacheModule.register({
       isGlobal: true,
       ttl: 300 * 1000,
+    }),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: 'trace',
+        transport: {
+          target: 'pino-pretty',
+          options: { singleLine: true },
+        },
+        serializers: {
+          req: (req) => ({
+            method: req.method,
+            url: req.url,
+            params: req.params,
+            query: req.query,
+          }),
+          res: (res) => ({
+            statusCode: res.statusCode,
+          }),
+        },
+      },
     }),
     ScheduleModule.forRoot(),
     WeatherModule,

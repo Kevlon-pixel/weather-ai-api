@@ -1,5 +1,6 @@
-import { HttpException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { PinoLogger } from 'nestjs-pino';
 
 export type OpenMeteoNow = {
   tempC: number;
@@ -13,7 +14,12 @@ type OpenMeteoResponse = {
   };
 };
 
+@Injectable()
 export class OpenMeteoProvider {
+  constructor(private readonly logger: PinoLogger) {
+    logger.setContext(OpenMeteoProvider.name);
+  }
+
   private readonly base = 'https://api.open-meteo.com/v1/forecast';
 
   async getNow(lat: number, lon: number): Promise<OpenMeteoNow> {
@@ -35,7 +41,6 @@ export class OpenMeteoProvider {
           'Open-meteo: нет поля current_weather.temperature в ответе API',
         );
       }
-
       return {
         tempC: cw.temperature,
         windMs: typeof cw.windspeed === 'number' ? cw.windspeed : undefined,
