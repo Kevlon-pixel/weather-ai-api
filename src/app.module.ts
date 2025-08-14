@@ -7,13 +7,13 @@ import { AppService } from './app.service';
 import { envSchema } from './validation/env.validation';
 import { LoggerModule } from 'nestjs-pino';
 import { WeatherModule } from './modules/weather/weather.module';
-import path from 'node:path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       validate: (env) => envSchema.parse(env),
+      envFilePath: ['.env'],
     }),
     CacheModule.register({
       isGlobal: true,

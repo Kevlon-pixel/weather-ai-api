@@ -6,7 +6,11 @@ export class WeatherController {
   constructor(private readonly weatherService: WeatherService) {}
 
   @Get()
-  async byCoords(@Query('lat') lat: string, @Query('lon') lon: string) {
-    return this.weatherService.byCoord(Number(lat), Number(lon));
+  async byCoords(
+    @Query('lat') lat: string,
+    @Query('lon') lon: string,
+    @Query('summary') summary?: boolean,
+  ) {
+    return this.weatherService.byCoord(Number(lat), Number(lon), summary);
   }
 }

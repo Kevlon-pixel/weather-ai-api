@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { CurrentNormalized } from '../types';
+import { ConfigService } from '@nestjs/config';
 
 type OWResponse = {
   main?: { temp?: number };
@@ -7,13 +8,15 @@ type OWResponse = {
 };
 
 export class OpenWeatherProvider {
+  constructor(private readonly config: ConfigService) {}
+
   readonly name = 'openweather';
   private base = 'https://api.openweathermap.org/data/2.5/weather';
-  private apikey = process.env.OPENWEATHER_API_KEY;
 
   async fetch(lat: number, lon: number): Promise<CurrentNormalized> {
     try {
-      if (!this.apikey) {
+      const apiKey = this.config.get<string>('OPENWEATHER_API_KEY');
+      if (!apiKey) {
         throw new Error('OPENWEATHER_API_KEY отсутствует');
       }
 
@@ -22,7 +25,7 @@ export class OpenWeatherProvider {
         params: {
           lat,
           lon,
-          appid: this.apikey,
+          appid: apiKey,
           units: 'metric',
         },
       });
@@ -34,6 +37,7 @@ export class OpenWeatherProvider {
         windMs: data.wind?.speed,
       };
     } catch (err) {
+      //console.log(err);
       throw new Error('Ошибка получения данных OpenWeather');
     }
   }
