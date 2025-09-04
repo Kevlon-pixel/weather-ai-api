@@ -1,5 +1,4 @@
 import { Context } from 'grammy';
-import { StartCommand } from '../commands/start-command';
 
 export class StartHandler {
     async execute(context: Context) {
@@ -7,6 +6,8 @@ export class StartHandler {
 
         if (context.callbackQuery?.message) {
             await context.reply('Кнопка старт нажата');
+        } else {
+            
         }
     }
 }

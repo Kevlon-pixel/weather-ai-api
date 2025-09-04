@@ -3,6 +3,7 @@ export const messages = {
     HELP: `Доступные команды:\n
      /start\n
      /help\n
-     /weather`,
+     /weather\n
+     /location`,
     WEATHER: `Пока что пустовато`,
 };

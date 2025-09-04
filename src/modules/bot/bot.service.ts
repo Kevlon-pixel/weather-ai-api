@@ -2,6 +2,7 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Bot } from 'grammy';
 import { Logger } from 'nestjs-pino';
+import { MyContext } from './my-context';
 
 @Injectable()
 export class BotService implements OnModuleInit, OnModuleDestroy {
@@ -17,7 +18,7 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
             throw new Error('Токен не был найден');
         }
 
-        this.bot = new Bot(token);
+        this.bot = new Bot<MyContext>(token);
         this.bot.catch((err) =>
             this.logger.error(`Global error: ${err.name}: ${err.message}`),
         );
