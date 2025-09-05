@@ -11,7 +11,7 @@ export function buildLocationMenu(handler: LocationHandler) {
             handler.changeLocation(context);
         })
         .row()
-        .back('Назад', (context) => {
+        .back('В главное меню', (context) => {
             context.editMessageText('Главное меню');
         });
 

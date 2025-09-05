@@ -10,6 +10,6 @@ export const WeatherMenu = new Menu<MyContext>('weather')
     .text('Погода на 3 дня')
     .text('Погода на 7 дней')
     .row()
-    .back('Назад', (context) => {
+    .back('В главное меню', (context) => {
         context.editMessageText('Главное меню');
     });

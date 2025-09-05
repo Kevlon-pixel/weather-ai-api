@@ -6,7 +6,7 @@ import { MyContext } from './my-context';
 
 @Injectable()
 export class BotService implements OnModuleInit, OnModuleDestroy {
-    private bot: Bot;
+    private bot: Bot<MyContext>;
     private started = false;
 
     constructor(
@@ -40,7 +40,7 @@ export class BotService implements OnModuleInit, OnModuleDestroy {
         }
     }
 
-    public botInstance(): Bot {
+    public botInstance(): Bot<MyContext> {
         if (!this.bot) {
             throw new Error('Бот не был инициализирован');
         }

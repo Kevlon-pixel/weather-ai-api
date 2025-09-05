@@ -2,23 +2,22 @@ import { Menu } from '@grammyjs/menu';
 import { MyContext } from '../my-context';
 import { LocationHandler } from '../handlers/location-handler';
 import { WeatherMenu } from './weather-menu';
-import { HelpMenu } from './help-menu';
 import { buildLocationMenu } from './location-menu';
 
 export const MainMenu = new Menu<MyContext>('main')
-    .text('Помощь', (context) => {
-        context.menu.nav('help');
-        context.editMessageText('Помощь');
+    .text('Помощь', async (ctx) => {
+        await ctx.menu.nav('help');
+        await ctx.editMessageText('Помощь');
     })
-    .text('Погода', (context) => {
-        context.menu.nav('weather');
-        context.editMessageText('Погода');
+    .text('Погода', async (ctx) => {
+        await ctx.menu.nav('weather');
+        await ctx.editMessageText('Погода');
     })
-    .text('Локация', (context) => {
-        context.menu.nav('location');
-        context.editMessageText('Локация');
+    .text('Локация', async (ctx) => {
+        await ctx.menu.nav('location');
+        await ctx.editMessageText('Локация');
     });
 
-MainMenu.register(HelpMenu);
+//MainMenu.register(HelpMenu);
 MainMenu.register(WeatherMenu);
-MainMenu.register(buildLocationMenu(new LocationHandler));
+MainMenu.register(buildLocationMenu(new LocationHandler()));

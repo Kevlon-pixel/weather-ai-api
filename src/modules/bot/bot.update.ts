@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Bot, Context, Filter, session } from 'grammy';
+import { Bot, Filter, session } from 'grammy';
 import { BotService } from './bot.service';
 import { StartHandler } from './handlers/start-handler';
 import { HelpHandler } from './handlers/help-handler';
@@ -7,21 +7,25 @@ import { WeatherHadler } from './handlers/weather-handler';
 import { MainMenu } from './menus/main-menu';
 import { FileAdapter } from '@grammyjs/storage-file';
 import { MyContext, SessionData } from './my-context';
+import { Menu } from '@grammyjs/menu';
+import { messages } from './messages/messages';
+import { WeatherMenu } from './menus/weather-menu';
+import { buildLocationMenu } from './menus/location-menu';
+import { LocationHandler } from './handlers/location-handler';
+import { openMenu } from './handlers/menu-handler';
 
 @Injectable()
 export class BotUpdate {
-    private readonly bot: Bot;
+    private readonly bot: Bot<MyContext>;
 
     constructor(
         private readonly botService: BotService,
-        private readonly startHandler: StartHandler,
-        private readonly helpHandler: HelpHandler,
-        private readonly weatherHandler: WeatherHadler,
+        private readonly locationHandler: LocationHandler,
     ) {
         this.bot = this.botService.botInstance();
 
         this.bot.use(
-            session<SessionData, Context>({
+            session<SessionData, MyContext>({
                 initial: () => ({}),
                 storage: new FileAdapter({ dirName: 'sessions' }),
             }),
@@ -32,27 +36,17 @@ export class BotUpdate {
         this.bot.use(WeatherMenu);
         this.bot.use(LocationMenu);*/
 
-        this.bot.command('start', (context: Context) =>
-            context.reply('Главное меню', { reply_markup: MainMenu }),
+        this.bot.command('start', (context: MyContext) =>
+            openMenu(context, 'Главное меню', MainMenu),
         );
-        /*this.bot.command('help', (context: Context) =>
-            context.reply('Помощь', { reply_markup: HelpMenu }),
+        this.bot.command('weather', (context: MyContext) =>
+            openMenu(context, 'Погода', WeatherMenu),
         );
-        this.bot.command('weather', (context: Context) =>
-            context.reply('Погода', { reply_markup: WeatherMenu }),
+        this.bot.command('location', (context: MyContext) =>
+            openMenu(context, 'Локация', buildLocationMenu(locationHandler)),
         );
-        this.bot.command('location', (context: Context) =>
-            context.reply('Локация', { reply_markup: LocationMenu }),
-        );*/
-
-        this.bot.callbackQuery('start', (context) =>
-            this.startHandler.execute(context),
-        );
-        this.bot.callbackQuery('help', (context: Context) =>
-            this.helpHandler.execute(context),
-        );
-        this.bot.callbackQuery('weather', (context: Context) =>
-            this.weatherHandler.execute(context),
+        this.bot.command('help', (context: MyContext) =>
+            openMenu(context, 'Помощь', MainMenu),
         );
 
         this.bot.on(

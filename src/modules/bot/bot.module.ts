@@ -9,6 +9,7 @@ import { StartHandler } from './handlers/start-handler';
 import { HelpHandler } from './handlers/help-handler';
 
 import { WeatherHadler } from './handlers/weather-handler';
+import { LocationHandler } from './handlers/location-handler';
 
 @Module({
     imports: [WeatherModule],
@@ -19,6 +20,7 @@ import { WeatherHadler } from './handlers/weather-handler';
         StartHandler,
         HelpHandler,
         WeatherHadler,
+        LocationHandler,
     ],
 })
 export class BotModule {}

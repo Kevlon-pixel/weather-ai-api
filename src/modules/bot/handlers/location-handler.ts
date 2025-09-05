@@ -1,4 +1,3 @@
-import { Context } from 'grammy';
 import { MyContext } from '../my-context';
 import { Injectable } from '@nestjs/common';
 

@@ -1,7 +1,7 @@
-import { Context } from 'grammy';
+import { MyContext } from '../my-context';
 
 export class StartHandler {
-    async execute(context: Context) {
+    async execute(context: MyContext) {
         await context.answerCallbackQuery();
 
         if (context.callbackQuery?.message) {
